@@ -1,0 +1,239 @@
+@page "/"
+@page "/home"
+@using ECommerce
+@using Models.ECommerce
+@using Northwind
+@using Models.Northwind
+@using CRMAppData
+@using Models.CRMAppData
+@inject NavigationManager NavigationManager
+@inject IECommerceService ECommerceService
+@inject INorthwindService NorthwindService
+@inject ICRMAppDataService CRMAppDataService
+
+<div class="row-layout home-container">
+    <div class="row-layout group">
+        <div class="column-layout group_1">
+            <div class="column-layout group_2">
+                <p class="typography__body-1 text">
+                    Quarterly Performance
+                </p>
+                <IgbCategoryChart DataSource="@_eCommerceRevenue" ChartType="CategoryChartType.Column" ComputedPlotAreaMarginMode="ComputedPlotAreaMarginMode.Series" class="category-chart" home-scope></IgbCategoryChart>
+                <a @onclick="@(e => Navigate("/reports"))" class="typography__body-2 hyperlink">
+                    View All Reports
+                </a>
+            </div>
+            <div class="column-layout group_3">
+                <p class="typography__body-1 text">
+                    New Contracts
+                </p>
+                <IgbGrid Data="@_northwindCustomers" PrimaryKey="CustomerID" DisplayDensity="DisplayDensity.Cosy" AllowFiltering="true" FilterMode="FilterMode.ExcelStyleFilter" class="ig-typography grid" home-scope>
+                    <IgbColumn Field="CustomerID" DataType="GridColumnDataType.String" Header="customerID" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="CompanyName" DataType="GridColumnDataType.String" Header="companyName" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="ContactName" DataType="GridColumnDataType.String" Header="contactName" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="ContactTitle" DataType="GridColumnDataType.String" Header="contactTitle" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.Street" DataType="GridColumnDataType.String" Header="street" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.City" DataType="GridColumnDataType.String" Header="city" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.Region" DataType="GridColumnDataType.String" Header="region" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.PostalCode" DataType="GridColumnDataType.String" Header="postalCode" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.Country" DataType="GridColumnDataType.String" Header="country" Sortable="true" Selectable="false"></IgbColumn>
+                    <IgbColumn Field="Address.Phone" DataType="GridColumnDataType.String" Header="phone" Sortable="true" Selectable="false"></IgbColumn>
+                </IgbGrid>
+                <a @onclick="@(e => Navigate("/contracts"))" class="typography__body-2 hyperlink">
+                    View All Contracts
+                </a>
+            </div>
+        </div>
+        <div class="column-layout group_4">
+            <div class="column-layout group_5">
+                <p class="typography__body-1 text">
+                    New Accounts
+                </p>
+                <div class="column-layout group_6">
+                    <IgbList class="list" home-scope>
+                        @foreach (var item in _northwindCustomers)
+                        {
+                            <IgbListItem>
+                                <IgbAvatar Src="assets/Account-List-Avatar-Icon.svg" Shape="AvatarShape.Rounded" slot="start" class="avatar" home-scope></IgbAvatar>
+                                <div>
+                                    <div class="column-layout group_7">
+                                        <a @onclick="@(e => Navigate("/account_sample"))" class="typography__body-2 hyperlink_1">
+                                            @item.CompanyName
+                                        </a>
+                                        <p class="typography__subtitle-2 text_1">
+                                            @item.ContactName
+                                        </p>
+                                        <div class="row-layout group_8">
+                                            <p class="typography__caption text_2">
+                                                @item.Address?.Street
+                                            </p>
+                                            <p class="typography__caption text_3">
+                                                ,
+                                            </p>
+                                            <p class="typography__caption text_2">
+                                                @item.Address?.City
+                                            </p>
+                                            <p class="typography__caption text_3">
+                                                ,
+                                            </p>
+                                            <p class="typography__caption text_2">
+                                                @item.Address?.Country
+                                            </p>
+                                        </div>
+                                        <p class="typography__caption text_2">
+                                            @item.Address?.Phone
+                                        </p>
+                                    </div>
+                                </div>
+                            </IgbListItem>
+                        }
+                    </IgbList>
+                </div>
+                <a @onclick="@(e => Navigate("/accounts"))" class="typography__body-2 hyperlink">
+                    View All Accounts 
+                </a>
+            </div>
+            <div class="column-layout group_5">
+                <p class="typography__body-1 text">
+                    Recent Contacts
+                </p>
+                <div class="column-layout group_6">
+                    <IgbList class="list" home-scope>
+                        @foreach (var item in _northwindCustomers)
+                        {
+                            <IgbListItem>
+                                <IgbAvatar Src="assets/Contacts-List-Avatar-Icon.svg" slot="start" Shape="AvatarShape.Circle" class="avatar_1" home-scope></IgbAvatar>
+                                <div>
+                                    <div class="column-layout group_7">
+                                        <a class="typography__body-2 hyperlink_2">
+                                            @item.ContactName
+                                        </a>
+                                        <div class="row-layout group_9">
+                                            <p class="typography__caption text_1">
+                                                @item.ContactTitle
+                                            </p>
+                                            <p class="typography__caption text_2">
+                                                @@
+                                            </p>
+                                            <a class="typography__caption hyperlink_3">
+                                                @item.CompanyName
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </IgbListItem>
+                        }
+                    </IgbList>
+                </div>
+                <a @onclick="@(e => Navigate("/contacts"))" class="typography__body-2 hyperlink">
+                    View All Contacts 
+                </a>
+            </div>
+        </div>
+        <div class="column-layout group_4">
+            <div class="column-layout group_3">
+                <p class="typography__body-1 text">
+                    My Meetings
+                </p>
+                <IgbList class="list" home-scope>
+                    @foreach (var item in _cRMAppDataMeetingsTasks)
+                    {
+                        <IgbListItem>
+                            <IgbAvatar Src="assets/Calendar-Avatar-Icon.svg" slot="start" class="avatar_2" home-scope></IgbAvatar>
+                            <div>
+                                <div class="column-layout group_7">
+                                    <div class="row-layout group_10">
+                                        <p class="typography__subtitle-2 text_1">
+                                            Meeting with 
+                                        </p>
+                                        <p class="typography__subtitle-2 text_1">
+                                            @item.Contact
+                                        </p>
+                                    </div>
+                                    <div class="row-layout group_11">
+                                        <p class="typography__caption text_2">
+                                            @item.MeetingDate
+                                        </p>
+                                        <p class="typography__caption text_2">
+                                            -
+                                        </p>
+                                        <p class="typography__caption text_2">
+                                            @item.MeetingTime
+                                        </p>
+                                    </div>
+                                    <IgbChip Size="SizableComponentSize.Large" class="chip" home-scope>
+                                        @item.MeetingType
+                                    </IgbChip>
+                                </div>
+                            </div>
+                        </IgbListItem>
+                    }
+                </IgbList>
+                <a @onclick="@(e => Navigate("/calendar"))" class="typography__body-2 hyperlink">
+                    View Calendar
+                </a>
+            </div>
+            <div class="column-layout group_3">
+                <p class="typography__body-1 text">
+                    Today’s Tasks
+                </p>
+                <IgbList class="list" home-scope>
+                    @foreach (var item in _cRMAppDataMeetingsTasks)
+                    {
+                        <IgbListItem>
+                            <IgbAvatar Src="assets/Tasks-Avatar-Icon.svg" slot="start" class="avatar_3" home-scope></IgbAvatar>
+                            <div>
+                                <div class="column-layout group_7">
+                                    <div class="row-layout group_12">
+                                        <p class="typography__subtitle-2 text_1">
+                                            @item.Task
+                                        </p>
+                                        <p class="typography__subtitle-2 text_1">
+                                            -
+                                        </p>
+                                        <p class="typography__subtitle-2 text_1">
+                                            @item.Company
+                                        </p>
+                                    </div>
+                                    <div class="row-layout group_13">
+                                        <p class="typography__caption text_2">
+                                            Due by
+                                        </p>
+                                        <p class="typography__caption text_2">
+                                            @item.DueDate
+                                        </p>
+                                    </div>
+                                    <IgbChip Size="SizableComponentSize.Large" class="chip" home-scope>
+                                        @item.TaskStatus
+                                    </IgbChip>
+                                </div>
+                            </div>
+                        </IgbListItem>
+                    }
+                </IgbList>
+                <a @onclick="@(e => Navigate("/tasks"))" class="typography__body-2 hyperlink">
+                    View Tasks
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<RevenueType> _eCommerceRevenue = new();
+    private List<CustomersType> _northwindCustomers = new();
+    private List<MeetingsTasksType> _cRMAppDataMeetingsTasks = new();
+
+    public void Navigate(string path)
+    {
+        NavigationManager.NavigateTo(path);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _eCommerceRevenue = await ECommerceService.GetRevenueList();
+        _northwindCustomers = await NorthwindService.GetCustomers();
+        _cRMAppDataMeetingsTasks = await CRMAppDataService.GetMeetingsTasksList();
+        await base.OnInitializedAsync();
+    }
+}
